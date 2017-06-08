@@ -274,7 +274,9 @@ namespace RocketModSpawnProtection
 
         protected override void Load()
         {
-            UnturnedPlayerEvents.OnPlayerUpdateGesture += UnturnedPlayerEvents_OnPlayerUpdateGesture;
+            if (getConfig().CancelOnPunch) {
+                UnturnedPlayerEvents.OnPlayerUpdateGesture += UnturnedPlayerEvents_OnPlayerUpdateGesture;
+            }
             if (getConfig().EnableProtectionBasedOnDist)
             {
                 UnturnedPlayerEvents.OnPlayerUpdatePosition += UnturnedPlayerEvents_OnPlayerUpdatePosition;
