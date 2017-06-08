@@ -112,7 +112,7 @@ namespace RocketModSpawnProtection
                     {"canceled_punch", "Your spawn protection expired because you punched!"},
                     {"canceled_dist", "Your protection has expired because of moving away from spawn!" },
                     {"canceled_bedrespawn", "You were not giving spawnprotection due to spawning at your bed"},
-                    {"canceled_combat", "You were not giving spawnprotection due to participating in combat"},
+                    {"canceled_combat", "Your spawn protection expired because you were involved in PVP combat!"},
                     {"protection_excluded", "You have disabled spawnprotection for yourself, do /toggleprotection to enable again"},
                     {"toggled_protection_on", "You will now receive spawn protection"},
                     {"toggled_protection_off", "You will no longer receive spawn protection"}
