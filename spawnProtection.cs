@@ -45,6 +45,12 @@ namespace RocketModSpawnProtection
             {
                 player.GetComponent<ProtectionComponent>().StartProtection();
             }
+
+            if (Configuration.Instance.CancelOnCombat)
+            {
+                player.Player.life.onHurt += OnHurt;
+            }
+
         }
 
 
@@ -58,10 +64,25 @@ namespace RocketModSpawnProtection
             DisableAllPlayersSpawnProtection();
         }
 
+        void OnHurt(Player player, byte damage, Vector3 force, EDeathCause cause, ELimb limb, CSteamID killer)
+        {
+
+            UnturnedPlayer damager = UnturnedPlayer.FromCSteamID(killer);
+            if (damager != null) {
+                ProtectionComponent component = damager.GetComponent<ProtectionComponent>();
+                if( component != null && component.protectionEnabled)
+                {
+                    UnturnedChat.Say(damager, Translate("canceled_combat"), Color.yellow);
+                    component.StopProtection();
+                }
+            }
+
+        }
 
         void OnRevive(UnturnedPlayer player, Vector3 position, byte angle)
         {
-            if (!Configuration.Instance.GiveProtectionOnRespawn || player == null)
+           
+           if (!Configuration.Instance.GiveProtectionOnRespawn || player == null)
                 return;
 
             if (IsExcluded(player.CSteamID.m_SteamID))
@@ -91,6 +112,7 @@ namespace RocketModSpawnProtection
                     {"canceled_punch", "Your spawn protection expired because you punched!"},
                     {"canceled_dist", "Your protection has expired because of moving away from spawn!" },
                     {"canceled_bedrespawn", "You were not giving spawnprotection due to spawning at your bed"},
+                    {"canceled_combat", "You were not giving spawnprotection due to participating in combat"},
                     {"protection_excluded", "You have disabled spawnprotection for yourself, do /toggleprotection to enable again"},
                     {"toggled_protection_on", "You will now receive spawn protection"},
                     {"toggled_protection_off", "You will no longer receive spawn protection"}

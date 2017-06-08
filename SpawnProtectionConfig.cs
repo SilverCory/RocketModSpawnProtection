@@ -13,6 +13,7 @@ namespace RocketModSpawnProtection
         public bool CancelProtectionOnEquip;
         public bool CancelProtectionIfInVehicleWithOthers;
         public bool CancelOnBedRespawn;
+        public bool CancelOnCombat;
         public bool GiveProtectionOnJoin;
         public bool GiveProtectionOnRespawn;
         public bool AutoRepairProtectedPlayersVehicles;
@@ -41,6 +42,7 @@ namespace RocketModSpawnProtection
             CancelProtectionOnEquip = true;
             CancelProtectionIfInVehicleWithOthers = true;
             CancelOnBedRespawn = true;
+            CancelOnCombat = true;
             GiveProtectionOnJoin = false;
             GiveProtectionOnRespawn = true;
             AutoRepairProtectedPlayersVehicles = true;
