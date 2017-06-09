@@ -49,9 +49,10 @@ namespace RocketModSpawnProtection
             if (Configuration.Instance.CancelOnCombat)
             {
                 player.Player.life.onHurt += OnHurt;
-            }
+            }  
 
         }
+
 
 
         protected override void Unload()
@@ -66,15 +67,26 @@ namespace RocketModSpawnProtection
 
         void OnHurt(Player player, byte damage, Vector3 force, EDeathCause cause, ELimb limb, CSteamID killer)
         {
+            
+            if( killer == null && killer != CSteamID.Nil && killer.IsValid() ) return;
 
-            UnturnedPlayer damager = UnturnedPlayer.FromCSteamID(killer);
-            if (damager != null) {
-                ProtectionComponent component = damager.GetComponent<ProtectionComponent>();
-                if( component != null && component.protectionEnabled)
+            var steamPlayer = Provider.clients.Where(p => p.playerID.steamID == killer).SingleOrDefault();
+            if (steamPlayer != null)
+            {
+
+                UnturnedPlayer damager = UnturnedPlayer.FromSteamPlayer(steamPlayer);
+                if (damager != null)
                 {
-                    UnturnedChat.Say(damager, Translate("canceled_combat"), Color.yellow);
-                    component.StopProtection();
+
+                    var component = damager.GetComponent<ProtectionComponent>();
+                    if (component != null && component.protectionEnabled)
+                    {
+                        UnturnedChat.Say(damager, Translate("canceled_combat"), Color.yellow);
+                        component.StopProtection();
+                    }
+
                 }
+
             }
 
         }
@@ -101,7 +113,7 @@ namespace RocketModSpawnProtection
                 return new Rocket.API.Collections.TranslationList
                 {
                     {"prot_started", "You have spawn protection for {0} seconds!"},
-                    {"canceled_item", "Your spawn protection expired because you equipted a item!"},
+                    {"canceled_item", "Your spawn protection expired because you equipped a item!"},
                     {"expired", "Your spawn protection expired!"},
                     {"canceled_veh", "Your spawn protection expired because you are in a vehicle with others!"},
                     {"admin_prot_enabled", "Enabled protection on {0}!"},
@@ -110,8 +122,8 @@ namespace RocketModSpawnProtection
                     {"usage_stop", "Correct command usage: /pstop <player>"},
                     {"noplayer", "Player '{0}' not found!"},
                     {"canceled_punch", "Your spawn protection expired because you punched!"},
-                    {"canceled_dist", "Your protection has expired because of moving away from spawn!" },
-                    {"canceled_bedrespawn", "You were not giving spawnprotection due to spawning at your bed"},
+                    {"canceled_dist", "Your protection has expired because you moved away from spawn!" },
+                    {"canceled_bedrespawn", "You were not given spawn protection due to spawning at your bed"},
                     {"canceled_combat", "Your spawn protection expired because you were involved in PVP combat!"},
                     {"protection_excluded", "You have disabled spawnprotection for yourself, do /toggleprotection to enable again"},
                     {"toggled_protection_on", "You will now receive spawn protection"},
